@@ -1,0 +1,69 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const isProd = import.meta.env.PROD;
+
+const allPosts = await getCollection("blog", ({ data }) => {
+  return isProd ? !data.draft : true;
+});
+
+const posts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+
+const totalPosts = allPosts.length;
+
+function toSlug(title: string): string {
+  return title.toLowerCase().replace(/\s+/g, "-") + ".md";
+}
+
+function formatYear(date: Date): string {
+  return date.getFullYear().toString();
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().split("T")[0];
+}
+---
+
+<BaseLayout title="sashwat.dev" description="sashwat's personal site and tech blog">
+  <!-- whoami -->
+  <section class="whoami">
+    <p class="whoami-command">whoami</p>
+    <div class="prompt">
+      <span class="prompt-line">sashwat. software engineer. i build systems, write about things i find interesting.</span>
+      <span class="prompt-indent">
+        <span class="social-links">
+          <a href="https://github.com/sashwatgupta" target="_blank" rel="noopener noreferrer">github</a>
+          <a href="https://twitter.com/sashwatgupta" target="_blank" rel="noopener noreferrer">twitter</a>
+        </span>
+      </span>
+    </div>
+  </section>
+
+  <!-- recent posts -->
+  <section class="posts-section">
+    <h2 class="terminal-heading">recent_posts/</h2>
+
+    <ul class="post-list">
+      {posts.map((post, i) => (
+        <li class="post-item">
+          <span class="post-index">[{String(i + 1).padStart(2, "0")}]</span>
+          <a class="post-title-link" href={`/blog/${post.id}`}>
+            {toSlug(post.data.title)}
+          </a>
+          <time class="post-date" datetime={formatDate(post.data.date)}>
+            {formatYear(post.data.date)}
+          </time>
+        </li>
+      ))}
+    </ul>
+
+    {totalPosts > 5 && (
+      <a href="/blog" class="all-posts-link">
+        all posts ({totalPosts}) →
+      </a>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const isProd = import.meta.env.PROD;
+
+const posts = (
+  await getCollection("blog", ({ data }) => {
+    return isProd ? !data.draft : true;
+  })
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function toSlug(title: string): string {
+  return title.toLowerCase().replace(/\s+/g, "-") + ".md";
+}
+
+function formatYear(date: Date): string {
+  return date.getFullYear().toString();
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().split("T")[0];
+}
+---
+
+<BaseLayout title="blog — sashwat.dev" description="all posts on sashwat.dev">
+  <div class="page-header">
+    <h1 class="terminal-heading">blog/</h1>
+  </div>
+
+  <ul class="post-list">
+    {posts.map((post, i) => (
+      <li class="post-item">
+        <span class="post-index">[{String(i + 1).padStart(2, "0")}]</span>
+        <a class="post-title-link" href={`/blog/${post.id}`}>
+          {toSlug(post.data.title)}
+        </a>
+        <time class="post-date" datetime={formatDate(post.data.date)}>
+          {formatYear(post.data.date)}
+        </time>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
