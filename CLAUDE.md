@@ -21,6 +21,7 @@ Deployment is triggered automatically by pushing to `main` — Cloudflare runs `
 - **Framework**: Astro 5, static output (`output: "static"` in `astro.config.ts`)
 - **Layout**: Single shared layout at `src/layouts/BaseLayout.astro` — accepts `title`, `description`, and `canonicalURL` props
 - **Blog**: Markdown files in `src/content/blog/` are loaded via Astro's Content Collections (glob loader). Schema defined in `src/content.config.ts` — required frontmatter: `title`, `date`, `description`; optional: `tags[]`, `draft` (defaults false)
+- **Homepage**: `src/pages/index.astro` — shows the 5 most recent non-draft posts; links to `/blog` when more exist
 - **Routing**: `src/pages/blog/[...slug].astro` generates one static page per post using `post.id` as the slug
 - **Styling**: Single global stylesheet at `src/styles/global.css`; JetBrains Mono loaded from Google Fonts
 - **Syntax highlighting**: Shiki with `tokyo-night` theme (configured in `astro.config.ts`)
@@ -39,7 +40,16 @@ draft: false
 ---
 ```
 
-Posts with `draft: true` are still built — filter them out in the blog index if needed.
+Posts with `draft: true` are excluded in production builds — both the homepage and blog index filter them using `import.meta.env.PROD`. During local dev (`npm run dev`), drafts are visible.
+
+## TypeScript Aliases
+
+Defined in `tsconfig.json`:
+- `@components/*` → `src/components/*`
+- `@layouts/*` → `src/layouts/*`
+- `@styles/*` → `src/styles/*`
+
+Prefer these over relative paths when importing.
 
 ## Deployment
 

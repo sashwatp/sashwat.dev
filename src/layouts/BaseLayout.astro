@@ -31,6 +31,14 @@ const {
       rel="stylesheet"
     />
 
+    <script is:inline>
+      (function () {
+        const saved = localStorage.getItem('theme');
+        if (saved === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
     <title>{title}</title>
   </head>
   <body>
@@ -40,6 +48,13 @@ const {
           <a href="/" class="nav-brand">sashwat.dev</a>
           <ul class="nav-links">
             <li><a href="/blog">blog</a></li>
+            <li>
+              <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                <span class="toggle-thumb">
+                  <span class="toggle-icon">☽</span>
+                </span>
+              </button>
+            </li>
           </ul>
         </nav>
       </header>
@@ -54,5 +69,28 @@ const {
         cc0 &mdash; public domain. built with astro.
       </div>
     </footer>
+    <script is:inline>
+      const toggle = document.getElementById('theme-toggle');
+      const icon = toggle.querySelector('.toggle-icon');
+      const html = document.documentElement;
+
+      // Sync icon with current state on load
+      if (html.getAttribute('data-theme') === 'light') {
+        icon.textContent = '☀';
+      }
+
+      toggle.addEventListener('click', () => {
+        const isLight = html.getAttribute('data-theme') === 'light';
+        if (isLight) {
+          html.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'dark');
+          icon.textContent = '☽';
+        } else {
+          html.setAttribute('data-theme', 'light');
+          localStorage.setItem('theme', 'light');
+          icon.textContent = '☀';
+        }
+      });
+    </script>
   </body>
 </html>

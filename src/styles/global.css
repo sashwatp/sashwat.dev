@@ -11,6 +11,17 @@
     SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+/* ===== Light Theme ===== */
+[data-theme="light"] {
+  --color-bg: #f5f5f5;
+  --color-surface: #e8e8e8;
+  --color-border: #e0e0e0;
+  --color-text: #1a1a1a;
+  --color-muted: #6e7681;
+  --color-accent: #007a3d;
+  --color-cyan: #0366d6;
+}
+
 /* ===== Reset & Base ===== */
 *,
 *::before,
@@ -94,6 +105,56 @@ a:hover {
 .nav-links a:hover {
   color: var(--color-text);
   text-decoration: none;
+}
+
+.theme-toggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  background: #252525;
+  border: 1.5px solid #333;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-muted);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  line-height: 1;
+  color: #1a1a1a;
+  transform: translateX(22px);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="light"] .theme-toggle {
+  background: #d8d8d8;
+  border-color: #bbb;
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  border-color: #999;
+}
+
+[data-theme="light"] .toggle-thumb {
+  transform: translateX(0);
+  background: #1a1a1a;
+  color: #f5f5f5;
 }
 
 /* ===== Footer ===== */
